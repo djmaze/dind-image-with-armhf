@@ -1,5 +1,7 @@
 # Docker in Docker image with up-to-date armhf support
 
+[![Build Status](https://ci.strahlungsfrei.de/api/badges/djmaze/dind-image-with-armhf/status.svg)](https://ci.strahlungsfrei.de/djmaze/dind-image-with-armhf)
+
 [The official docker-in-docker image](https://hub.docker.com/_/docker) does not contain an up-to-date armhf version. The official builds are not working anymore [since 19.03](https://github.com/docker-library/docker/issues/260).
 
 Turns out building the latest versions of the docker daemon using the golang images in a container will always yield a broken executable on armhf.
