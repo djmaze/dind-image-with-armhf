@@ -1,0 +1,59 @@
+---
+kind: pipeline
+type: docker
+name: default
+
+steps:
+  - name: get repo & patch
+    image: alpine
+    environment:
+      FULL_VERSION: ${DRONE_TAG:1}
+      MAJOR_VERSION: ${DRONE_TAG:1:5}
+    commands:
+      - apk add --no-cache git
+      - git clone --depth 1 --single-branch https://github.com/docker-library/docker.git docker
+      - mv docker/$${MAJOR_VERSION}/* .
+      - sed -i "s|https://download.docker.com/linux/static/stable/armhf/docker-$${FULL_VERSION}.tgz|https://github.com/djmaze/docker-armhf-binaries/releases/download/$${FULL_VERSION}/docker-$${FULL_VERSION}.tgz|" Dockerfile
+      - sed -i "s|FROM docker:$${MAJOR_VERSION}|FROM mazzolino/docker:$${MAJOR_VERSION}|" dind/Dockerfile
+    when:
+      event: tag
+
+  - name: build docker image
+    image: thegeeklab/drone-docker-buildx:20
+    settings:
+      repo: mazzolino/docker
+      tags:
+        - "${DRONE_TAG:1}"
+        - "${DRONE_TAG:1:5}"
+        - "${DRONE_TAG:1:2}"
+      platforms:
+        - linux/amd64
+        - linux/arm64
+        - linux/armhf
+      username:
+        from_secret: docker_username
+      password:
+        from_secret: docker_password
+    when:
+      event: tag
+
+  - name: build dind image
+    image: thegeeklab/drone-docker-buildx:20
+    settings:
+      context: dind
+      dockerfile: dind/Dockerfile
+      repo: mazzolino/docker
+      tags:
+        - "${DRONE_TAG:1}-dind"
+        - "${DRONE_TAG:1:5}-dind"
+        - "${DRONE_TAG:1:2}-dind"
+      platforms:
+        - linux/amd64
+        - linux/arm64
+        - linux/armhf
+      username:
+        from_secret: docker_username
+      password:
+        from_secret: docker_password
+    when:
+      event: tag
