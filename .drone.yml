@@ -57,3 +57,8 @@ steps:
         from_secret: docker_password
     when:
       event: tag
+---
+kind: signature
+hmac: 6540d83df2e566db5b67b41e54159f3026beccf185a1837e2adf38df25707f71
+
+...
