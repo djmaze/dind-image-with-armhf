@@ -12,10 +12,19 @@ For that reason, this image contains armhf binaries [built manually on a armhf m
 
 This image should be fully compatible with the official [`docker`](https://github.com/djmaze/docker-armhf-binaries) image, so you just need to replace `docker` with `mazzolino/docker` in your builds or configurations.
 
-The `latest` tag is not supported currently, so you need to specify a version, e.g. `mazzolino/docker:20`.
+The following tags are currently supported:
+
+- `20.10.12`, `20.10`, `20`
+- `20.10.12-dind`, `20.10-dind`, `20-dind`
+
+The `latest` tag is not supported currently, so you need to specify a version explicitely, e.g. `mazzolino/docker:20`.
 
 Also, for now only the following architectures are supported:
 
-- amd64
-- arm64
-- armhf
+- `amd64`
+- `arm64`
+- `armhf`
+
+## How to contribute
+
+If you need more variants or architectures, please open an issue.
